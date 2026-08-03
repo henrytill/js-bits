@@ -1,7 +1,7 @@
 import * as prelude from './prelude.mjs';
 
-/** @typedef {import('./test.mjs')} TestModule */
-/** @typedef {import('./pinboard.test.mjs')} PinboardTestModule*/
+/** @typedef {typeof import('./test.mjs')} TestModule */
+/** @typedef {typeof import('./pinboard.test.mjs')} PinboardTestModule*/
 
 /**
  * @param {boolean} [stamp]

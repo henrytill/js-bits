@@ -29,13 +29,11 @@
  * @property {Record<string, Capability>} caps - The capabilities granted to the caller.
  */
 
-/** @enum {number} */
-export const ResultTag = {
-  OK: 0,
-  UNKNOWN_CALLER: 1,
-  UNAVAILABLE_CAPABILITY: 2,
-  REVOKED_CAPABILITY: 3,
-};
+/**
+ * The tag of a `RequestResult` or `RevokeResult`.
+ *
+ * @typedef {'ok' | 'unknown-caller' | 'unavailable-capability' | 'revoked-capability'} ResultTag
+ */
 
 /**
  * A tagged union representing the result of a request for a capability.
@@ -69,15 +67,15 @@ export const makePowerbox = () => {
   const request = (callerId, capId) => {
     const caller = callers.find((c) => c.id === callerId);
     if (!caller) {
-      return { tag: ResultTag.UNKNOWN_CALLER, value: null };
+      return { tag: 'unknown-caller', value: null };
     }
     const cap = caller.caps[capId];
     if (!cap) {
-      return { tag: ResultTag.UNAVAILABLE_CAPABILITY, value: null };
+      return { tag: 'unavailable-capability', value: null };
     } else if (cap.isRevoked) {
-      return { tag: ResultTag.REVOKED_CAPABILITY, value: cap.proxy };
+      return { tag: 'revoked-capability', value: cap.proxy };
     } else {
-      return { tag: ResultTag.OK, value: cap.proxy };
+      return { tag: 'ok', value: cap.proxy };
     }
   };
 
@@ -111,17 +109,17 @@ export const makePowerbox = () => {
   const revoke = (callerId, capId) => {
     const caller = callers.find((c) => c.id === callerId);
     if (!caller) {
-      return { tag: ResultTag.UNKNOWN_CALLER };
+      return { tag: 'unknown-caller' };
     }
     const cap = caller.caps[capId];
     if (!cap) {
-      return { tag: ResultTag.UNAVAILABLE_CAPABILITY };
+      return { tag: 'unavailable-capability' };
     } else if (cap.isRevoked) {
-      return { tag: ResultTag.REVOKED_CAPABILITY };
+      return { tag: 'revoked-capability' };
     } else {
       cap.revoke();
       cap.isRevoked = true;
-      return { tag: ResultTag.OK };
+      return { tag: 'ok' };
     }
   };
 
