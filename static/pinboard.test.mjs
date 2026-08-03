@@ -1,8 +1,8 @@
 import * as prelude from './prelude.mjs';
 
-/** @type {import('./pinboard.mjs')} */
+/** @type {typeof import('./pinboard.mjs')} */
 const pinboard = await import(prelude.dynamicPath('./pinboard.mjs'));
-/** @type {import('./test.mjs')} */
+/** @type {typeof import('./test.mjs')} */
 const test = await import(prelude.dynamicPath('./test.mjs'));
 
 export const PINBOARD_XML = `<?xml version="1.0" encoding="UTF-8"?>

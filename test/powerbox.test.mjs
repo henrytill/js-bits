@@ -41,21 +41,21 @@ describe('request()', () => {
 
   test('request() should return UnknownCaller if the caller has not been granted any capabilities', () => {
     const result = pb.request(CALLER_ID, CAP_ID);
-    assert.equal(result.tag, powerbox.ResultTag.UNKNOWN_CALLER);
+    assert.equal(result.tag, 'unknown-caller');
     assert.equal(result.value, null);
   });
 
   test('request() should return UnavailableCapability if the capability has not been granted', () => {
     pb.grant(CALLER_ID, 'console', console);
     const result = pb.request(CALLER_ID, CAP_ID);
-    assert.equal(result.tag, powerbox.ResultTag.UNAVAILABLE_CAPABILITY);
+    assert.equal(result.tag, 'unavailable-capability');
     assert.equal(result.value, null);
   });
 
   test('request() should return the expected object if the capability has been granted', () => {
     pb.grant(CALLER_ID, CAP_ID, adder);
     const result = pb.request(CALLER_ID, CAP_ID);
-    assert.equal(result.tag, powerbox.ResultTag.OK);
+    assert.equal(result.tag, 'ok');
     const maybeGadder = /** @type {Adder | null} */ (result.value);
     assert.notEqual(maybeGadder, null);
     assert.equal(maybeGadder?.add(2, 2), 4);
@@ -63,9 +63,9 @@ describe('request()', () => {
 
   test('request() should return RevokedCapability if the capability has been revoked', () => {
     const revokeResult = pb.revoke(CALLER_ID, CAP_ID);
-    assert.equal(revokeResult.tag, powerbox.ResultTag.OK);
+    assert.equal(revokeResult.tag, 'ok');
     const requestResult = pb.request(CALLER_ID, CAP_ID);
-    assert.equal(requestResult.tag, powerbox.ResultTag.REVOKED_CAPABILITY);
+    assert.equal(requestResult.tag, 'revoked-capability');
     const maybeGadder = /** @type {Adder | null} */ (requestResult.value);
     assert.notEqual(maybeGadder, null);
     assert.throws(() => maybeGadder?.add(2, 2), checkError);
@@ -78,28 +78,28 @@ describe('revoke()', () => {
 
   it('should return UnknownCaller if the caller has not been granted any capabilities', () => {
     const result = pb.revoke(CALLER_ID, CAP_ID);
-    assert.equal(result.tag, powerbox.ResultTag.UNKNOWN_CALLER);
+    assert.equal(result.tag, 'unknown-caller');
   });
 
   it('should return UnavailableCapability if the capability has not been granted', () => {
     pb.grant(CALLER_ID, 'console', console);
     const result = pb.revoke(CALLER_ID, CAP_ID);
-    assert.equal(result.tag, powerbox.ResultTag.UNAVAILABLE_CAPABILITY);
+    assert.equal(result.tag, 'unavailable-capability');
   });
 
   it('should revoke a capability', () => {
     pb.grant(CALLER_ID, CAP_ID, adder);
     const requestResult = pb.request(CALLER_ID, CAP_ID);
-    assert.equal(requestResult.tag, powerbox.ResultTag.OK);
+    assert.equal(requestResult.tag, 'ok');
     const maybeGadder = /** @type {Adder | null} */ (requestResult.value);
     assert.notEqual(maybeGadder, null);
     const revokeResult = pb.revoke(CALLER_ID, CAP_ID);
-    assert.equal(revokeResult.tag, powerbox.ResultTag.OK);
+    assert.equal(revokeResult.tag, 'ok');
     assert.throws(() => maybeGadder?.add(2, 2), checkError);
   });
 
   it('should return RevokedCapability if the capability has been revoked', () => {
     const result = pb.revoke(CALLER_ID, CAP_ID);
-    assert.equal(result.tag, powerbox.ResultTag.REVOKED_CAPABILITY);
+    assert.equal(result.tag, 'revoked-capability');
   });
 });
